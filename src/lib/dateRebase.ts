@@ -11,14 +11,13 @@
 //
 // HOW IT WORKS:
 // At runtime, we find the latest timestamp in the raw data
-// and compute an offset so that bet lands on yesterday.
+// and compute an offset so that bet lands on today (same time-of-day).
 // Every other timestamp shifts by the same offset, preserving
 // all relative spacing between bets (streaks, clusters, etc).
 //
 // RESULT:
-// - Yesterday always has the most recent bets
-// - Last 7 days always has ~12-15 settled bets
-// - Last 30 days always has ~40-50 settled bets
+// - The newest bet aligns with "now" at page load / refresh
+// - Rolling windows (7 / 30 days) stay populated as calendar time moves
 // - All patterns (escalating stakes, rapid cluster, etc) intact
 // ============================================================
 
@@ -35,9 +34,9 @@ interface RawBet {
   outcome_selected: string;
   odds: number;
   stake: number;
-  outcome: "won" | "lost";
-  winnings: number;
-  profit: number;
+  outcome: "won" | "lost" | "pending";
+  winnings: number | null;
+  profit: number | null;
 }
 
 interface HistoryJSON {
@@ -53,8 +52,8 @@ interface HistoryJSON {
 // ---- core rebase ----
 
 /**
- * Shifts all bet timestamps so the most recent bet lands on yesterday.
- * All relative spacing between bets is preserved exactly.
+ * Shifts all bet timestamps so the most recent bet lands on today at the same
+ * time-of-day (relative to when this runs). All relative spacing is preserved.
  */
 export function rebaseBetDates(rawBets: RawBet[]): Bet[] {
   if (rawBets.length === 0) return [];
@@ -64,12 +63,9 @@ export function rebaseBetDates(rawBets: RawBet[]): Bet[] {
     ...rawBets.map((b) => new Date(b.timestamp).getTime())
   );
 
-  // Target: yesterday at the same time-of-day as the latest static bet
-  const yesterday = new Date();
-  yesterday.setDate(yesterday.getDate() - 1);
-
-  // Offset in milliseconds to apply to every timestamp
-  const offsetMs = yesterday.getTime() - latestMs;
+  const today = new Date();
+  // keep same time-of-day as the latest static bet, just change the calendar anchor
+  const offsetMs = today.getTime() - latestMs;
 
   return rawBets.map((b) => {
     const originalMs = new Date(b.timestamp).getTime();
@@ -92,12 +88,11 @@ export function rebaseBetDates(rawBets: RawBet[]): Bet[] {
 }
 
 /**
- * Loads history.json and returns bets with dynamically rebased timestamps.
- * Call this once per session — the result is stable for the lifetime of
- * the session since yesterday doesn't change mid-session.
+ * Loads history.json-shaped data and returns bets with rebased timestamps.
+ * Pair with a module-level cache (see getSessionBets) for session stability.
  */
 export function getRebasedBets(historyData: HistoryJSON): Bet[] {
-  return rebaseBetDates(historyData.bets as RawBet[]);
+  return rebaseBetDates(historyData.bets);
 }
 
 // ---- debug helper (dev only) ----

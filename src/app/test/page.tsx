@@ -1,6 +1,8 @@
 import type { ReactNode } from "react";
 import historyData from "@/data/history.json";
 import eventsData from "@/data/events.json";
+import { getRebaseDebugInfo } from "@/lib/dateRebase";
+import { getSessionBets } from "@/lib/sessionBets";
 import {
   calculateSingle,
   calculateAllSingles,
@@ -116,12 +118,33 @@ function getLast7DaysSettled(bets: Bet[]): Bet[] {
 }
 
 export default function TestPage() {
-  const bets = (historyData as { bets: Bet[] }).bets;
+  const rawBets = (historyData as { bets: Bet[] }).bets;
+  const bets = getSessionBets();
+  const rebaseInfo = getRebaseDebugInfo(bets);
+  const todayIsoDate = new Date().toISOString().slice(0, 10);
+
+  const passRebaseRawCount = rawBets.length === EXPECT_BET_COUNT;
+  const passRebaseBetsCount = bets.length === EXPECT_BET_COUNT;
+  const passRebaseLatest = rebaseInfo.latestBet === todayIsoDate;
+  const passRebaseSpan =
+    rebaseInfo.spanDays >= 90 && rebaseInfo.spanDays <= 110;
+  const passRebaseLast7 = rebaseInfo.last7DaysCount >= 5;
+  const passRebaseLast30 = rebaseInfo.last30DaysCount >= 20;
+
   const events = (
     eventsData as { events: { sport: string; isLive?: boolean }[] }
   ).events;
 
   const suite: boolean[] = [];
+
+  suite.push(
+    passRebaseRawCount,
+    passRebaseBetsCount,
+    passRebaseLatest,
+    passRebaseSpan,
+    passRebaseLast7,
+    passRebaseLast30
+  );
 
   const eventsLoaded = Array.isArray(events) && events.length > 0;
   const historyLoaded = Array.isArray(bets) && bets.length > 0;
@@ -387,7 +410,7 @@ export default function TestPage() {
               Dev Test Suite
             </h1>
             <p className="mt-1 text-sm text-gray-500">
-              Milestone 2B — calculations vs history.json &amp; events.json
+              Milestone 2B — rebased history + events.json (see Section 0)
             </p>
           </div>
           <div
@@ -400,6 +423,49 @@ export default function TestPage() {
             {passed}/{total} passing — {allPass ? "ALL PASS" : "SOME FAIL"}
           </div>
         </header>
+
+        {/* Section 0 */}
+        <section className="mb-6 rounded-xl bg-gray-900 p-6">
+          <h2 className="mb-4 text-lg font-semibold text-white">
+            Section 0: Date rebase
+          </h2>
+          <TestRow
+            label="Raw bet count"
+            left={String(rawBets.length)}
+            middle={`expected ${EXPECT_BET_COUNT}`}
+            pass={passRebaseRawCount}
+          />
+          <TestRow
+            label="Rebased bet count"
+            left={String(bets.length)}
+            middle={`expected ${EXPECT_BET_COUNT}`}
+            pass={passRebaseBetsCount}
+          />
+          <TestRow
+            label="Latest rebased bet"
+            left={rebaseInfo.latestBet}
+            middle={`expected today (UTC): ${todayIsoDate}`}
+            pass={passRebaseLatest}
+          />
+          <TestRow
+            label="Span (days)"
+            left={`${rebaseInfo.spanDays} days`}
+            middle="expected ~95–100 days"
+            pass={passRebaseSpan}
+          />
+          <TestRow
+            label="Last 7 days count"
+            left={String(rebaseInfo.last7DaysCount)}
+            middle="expected ≥ 5 bets in window"
+            pass={passRebaseLast7}
+          />
+          <TestRow
+            label="Last 30 days count"
+            left={String(rebaseInfo.last30DaysCount)}
+            middle="expected ≥ 20 bets in window"
+            pass={passRebaseLast30}
+          />
+        </section>
 
         {/* Section 1 */}
         <section className="mb-6 rounded-xl bg-gray-900 p-6">
