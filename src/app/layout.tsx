@@ -1,6 +1,12 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { Instrument_Sans } from "next/font/google";
 import "./globals.css";
+
+const instrumentSans = Instrument_Sans({
+  subsets: ["latin"],
+  display: "swap",
+});
 
 export const metadata: Metadata = {
   title: "Veto - Finnish iGaming Betting Slip",
@@ -14,13 +20,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <head>
-        <link
-          href="https://fonts.googleapis.com/css2?family=Instrument+Sans:ital,wght@0,400..700;1,400..700&display=swap"
-          rel="stylesheet"
-        />
-      </head>
-      <body className="antialiased">
+      <body className={`${instrumentSans.className} antialiased`}>
         {process.env.NODE_ENV === "development" && (
           <nav className="fixed top-0 left-0 right-0 z-50 flex h-9 items-center gap-4 border-b border-amber-900/50 bg-amber-950/95 px-4 text-xs text-amber-100 backdrop-blur-sm">
             <span className="font-mono font-semibold tracking-wide text-amber-400">

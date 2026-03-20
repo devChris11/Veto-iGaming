@@ -9,6 +9,10 @@
 export interface Score {
   home: number;
   away: number;
+  /** Match clock (e.g. football) — present on live events in data */
+  time?: string;
+  /** Game period (e.g. ice hockey) — present on live events in data */
+  period?: string;
 }
 
 /**
@@ -20,12 +24,26 @@ export interface Odds1X2 {
   "2": number;
 }
 
+/** Two-way winner odds (e.g. ice hockey / US sports). */
+export interface MoneylineOdds {
+  home: number;
+  away: number;
+}
+
+/** Over / under 2.5 goals (or equivalent) totals market. */
+export interface OverUnderOdds {
+  over25: number;
+  under25: number;
+}
+
 /**
  * Maps market identifiers to their odds structure.
- * Currently supports 1X2 market with odds for home ("1"), draw ("X"), and away ("2").
+ * Events may include any combination present in feed / seed data.
  */
 export interface Markets {
-  "1X2": Odds1X2;
+  "1X2"?: Odds1X2;
+  moneyline?: MoneylineOdds;
+  OverUnder?: OverUnderOdds;
 }
 
 /**
