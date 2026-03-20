@@ -1,30 +1,413 @@
 @import "tailwindcss";
 
+/* ============================================
+   LIGHT MODE (DEFAULT)
+   ============================================ */
 :root {
+  /* Base page colors */
   --background: #ffffff;
   --foreground: #171717;
 }
 
 @theme inline {
+  /* ============================================
+     TYPOGRAPHY SYSTEM
+     ============================================ */
+
+  /* ----- Font Family ----- */
+  /* Instrument Sans - Only font used throughout the entire application */
+  /* Professional, readable, excellent at small sizes (betting odds, stakes) */
+  /* Wide weight range (400-700) for hierarchy */
+  --font-sans: "Instrument Sans", -apple-system, BlinkMacSystemFont, "Segoe UI",
+    Roboto, "Helvetica Neue", Arial, sans-serif;
+
+  /* ----- Font Sizes ----- */
+  /* Usage guide for betting-specific needs */
+  --font-size-2xs: 0.625rem; /* 10px - Very small labels, metadata */
+  --font-size-xs: 0.75rem; /* 12px - Small labels, footnotes, timestamps */
+  --font-size-sm: 0.875rem; /* 14px - Secondary text, form inputs, captions */
+  --font-size-base: 1rem; /* 16px - Body text, standard content, stakes input */
+  --font-size-lg: 1.125rem; /* 18px - Emphasized text, odds display */
+  --font-size-xl: 1.25rem; /* 20px - Card titles, returns display, small headings */
+  --font-size-2xl: 1.5rem; /* 24px - Section headings, major card titles */
+  --font-size-3xl: 1.875rem; /* 30px - Page titles, hero text */
+  --font-size-4xl: 2.25rem; /* 36px - Marketing headings, splash screens */
+  --font-size-5xl: 3rem; /* 48px - Hero headings, landing page titles */
+
+  /* Component-specific font size usage:
+     - Odds display: text-lg font-semibold
+     - Stakes input: text-base
+     - Returns display: text-xl font-bold
+     - Card titles: text-xl font-semibold
+     - Section headers: text-2xl font-bold
+     - Event team names: text-base font-medium
+     - Timestamps: text-xs text-gray-500
+     - Metadata/labels: text-sm text-gray-600
+  */
+
+  /* ----- Font Weights ----- */
+  /* Available weights in Instrument Sans: 400-700 */
+  /* Usage guide:
+     - font-normal (400): Body text, descriptions, general content
+     - font-medium (500): Emphasis, labels, button text, form labels
+     - font-semibold (600): Headings, important text, odds display
+     - font-bold (700): Strong emphasis, CTAs, returns display, profits
+  */
+
+  /* ----- Line Heights ----- */
+  /* Usage guide:
+     - leading-tight (1.25): Large headings, hero text (more compact)
+     - leading-snug (1.375): Smaller headings, card titles
+     - leading-normal (1.5): Body text, paragraphs (optimal readability)
+     - leading-relaxed (1.625): Long-form content, articles
+  */
+
+  /* ============================================
+     COLOR SYSTEM - COMPLETE PALETTE
+     ============================================ */
+
+  /* ----- Base Colors ----- */
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+
+  /* ----- PRIMARY (BLUE) - Trust & Stability ----- */
+  /* Design DNA: Veikkaus trustworthiness + banking/finance association */
+  /* Why Blue: Finnish preference for cool colors, not aggressive (responsible gaming) */
+  /* Use for: Main actions, primary buttons, active states, links, brand elements */
+  --color-primary-50: #eff6ff;
+  --color-primary-100: #dbeafe;
+  --color-primary-200: #bfdbfe;
+  --color-primary-300: #93c5fd;
+  --color-primary-400: #60a5fa;
+  --color-primary-500: #3b82f6;
+  --color-primary-600: #2563eb;
+  --color-primary-700: #1d4ed8;
+  --color-primary-800: #1e40af;
+  --color-primary-900: #1e3a8a;
+
+  /* ----- SUCCESS (GREEN) - Wins, Positive Outcomes, Savings ----- */
+  /* Design DNA: Universal win signal, positive reinforcement for responsible gaming */
+  /* Why Green: Calming (not aggressive), positive psychology, savings feature innovation */
+  /* Use for: Win badges, positive ROI, profit displays, success messages, SAVINGS FEATURE */
+  --color-success-50: #ecfdf5;
+  --color-success-100: #d1fae5;
+  --color-success-200: #a7f3d0;
+  --color-success-300: #6ee7b7;
+  --color-success-400: #34d399;
+  --color-success-500: #10b981;
+  --color-success-600: #059669;
+  --color-success-700: #047857;
+  --color-success-800: #065f46;
+  --color-success-900: #064e3b;
+
+  /* ----- WARNING (ORANGE) - Caution, High Stakes, Attention ----- */
+  /* Design DNA: Attention without alarm, "slow down" signal for responsible gaming */
+  /* Why Orange: Friendly caution (not harsh like red), draws attention without panic */
+  /* Use for: High stake warnings (>€65), caution messages, important alerts, threshold breaches */
+  --color-warning-50: #fffbeb;
+  --color-warning-100: #fef3c7;
+  --color-warning-200: #fde68a;
+  --color-warning-300: #fcd34d;
+  --color-warning-400: #fbbf24;
+  --color-warning-500: #f59e0b;
+  --color-warning-600: #d97706;
+  --color-warning-700: #b45309;
+  --color-warning-800: #92400e;
+  --color-warning-900: #78350f;
+
+  /* ----- ERROR (RED) - Losses, Errors, Danger, Delete Actions ----- */
+  /* Design DNA: Universal danger signal, honest transparency for losses */
+  /* Why Red: Clear danger/loss indicator, validates negative outcomes, error states */
+  /* Use for: Loss displays, error messages, negative ROI, delete buttons, validation errors */
+  --color-error-50: #fef2f2;
+  --color-error-100: #fee2e2;
+  --color-error-200: #fecaca;
+  --color-error-300: #fca5a5;
+  --color-error-400: #f87171;
+  --color-error-500: #ef4444;
+  --color-error-600: #dc2626;
+  --color-error-700: #b91c1c;
+  --color-error-800: #991b1b;
+  --color-error-900: #7f1d1d;
+
+  /* Semantic aliases for components (backward compatibility) */
   --color-primary: #2563eb;
   --color-success: #16a34a;
   --color-warning: #d97706;
   --color-error: #dc2626;
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+
+  /* ----- NEUTRALS (GRAY) - Backgrounds, Text Hierarchy, Borders ----- */
+  /* Design DNA: Clean, functional Finnish aesthetic, high readability */
+  /* Why Gray: Provides visual hierarchy, backgrounds, text shades, borders */
+  /* Use for: Page backgrounds, card surfaces, text hierarchy, borders, dividers */
+  --color-gray-50: #f9fafb;
+  --color-gray-100: #f3f4f6;
+  --color-gray-200: #e5e7eb;
+  --color-gray-300: #d1d5db;
+  --color-gray-400: #9ca3af;
+  --color-gray-500: #6b7280;
+  --color-gray-600: #4b5563;
+  --color-gray-700: #374151;
+  --color-gray-800: #1f2937;
+  --color-gray-900: #111827;
+
+  /* Text hierarchy reference:
+     - Primary headings: text-gray-900 font-bold
+     - Secondary headings: text-gray-700 font-semibold
+     - Body text: text-gray-600 font-normal
+     - Secondary text: text-gray-500 font-normal
+     - Disabled text: text-gray-400
+     - Placeholder text: text-gray-400
+  */
+
+  /* ----- SPECIAL ACCENT COLORS ----- */
+  --color-live: #dc2626; /* Live betting indicator (pulsing red dot) - same as error-600 */
+
+  /* ----- GRADIENT DEFINITIONS FOR FEATURED CARDS ----- */
+  /* Boosted Odds Card (🔥 Fire/Energy) */
+  --gradient-boosted-from: #ef4444;
+  --gradient-boosted-to: #f97316;
+  /* Usage: bg-gradient-to-r from-[--gradient-boosted-from] to-[--gradient-boosted-to] */
+
+  /* Quick Bets Card (⚡ Speed/Fast) */
+  --gradient-quick-from: #3b82f6;
+  --gradient-quick-to: #06b6d4;
+  /* Usage: bg-gradient-to-r from-[--gradient-quick-from] to-[--gradient-quick-to] */
+
+  /* Banker Picks Card (💎 Premium/Exclusive) */
+  --gradient-banker-from: #a855f7;
+  --gradient-banker-to: #ec4899;
+  /* Usage: bg-gradient-to-r from-[--gradient-banker-from] to-[--gradient-banker-to] */
+
+  /* Value Bets Card (💰 Value/Money) */
+  --gradient-value-from: #22c55e;
+  --gradient-value-to: #10b981;
+  /* Usage: bg-gradient-to-r from-[--gradient-value-from] to-[--gradient-value-to] */
+
+  /* ============================================
+     SPACING & SIZING SYSTEM
+     ============================================ */
+
+  /* Tailwind's default spacing scale is perfect (based on 0.25rem = 4px) */
+  /* Additional custom spacing values for precise control */
+  --spacing-18: 4.5rem;
+  --spacing-22: 5.5rem;
+  --spacing-26: 6.5rem;
+  --spacing-30: 7.5rem;
+
+  /* Component spacing standards (use Tailwind classes):
+     - Card padding: p-6 (24px)
+     - Button padding: px-4 py-2 (16px horizontal, 8px vertical)
+     - Large button padding: px-6 py-3 (24px horizontal, 12px vertical)
+     - Input padding: px-3 py-2 (12px horizontal, 8px vertical)
+     - Section spacing: mb-8 (32px between major sections)
+     - Component gap: gap-4 (16px between flex/grid items)
+     - Page padding: px-4 md:px-6 lg:px-8 (responsive page margins)
+     - Betting slip padding: p-4 md:p-6
+     - Modal padding: p-6 md:p-8
+  */
+
+  /* ============================================
+     BORDER RADIUS SCALE
+     ============================================ */
+
+  /* Tailwind's default border radius values */
+  /* Usage guide for components:
+     - Cards: rounded-lg (8px) - betting cards, event cards
+     - Buttons: rounded-lg (8px) - all CTAs, action buttons
+     - Inputs: rounded-md (6px) - form inputs, text fields
+     - Badges/Pills: rounded-full - status badges, tags
+     - Modals: rounded-xl (12px) - dialog boxes, popups
+     - Images: rounded-md (6px) - event images, avatars
+     - Betting slip: rounded-lg (8px) - slip container
+     - Dropdowns: rounded-lg (8px) - select menus
+     - Tooltips: rounded-md (6px) - helper tooltips
+  */
+
+  /* Border radius values (Tailwind defaults):
+     - rounded-none: 0px (rarely used)
+     - rounded-sm: 2px (subtle rounding)
+     - rounded: 4px (default minimal rounding)
+     - rounded-md: 6px (medium rounding) ← INPUTS
+     - rounded-lg: 8px (large rounding) ← CARDS, BUTTONS
+     - rounded-xl: 12px (extra large) ← MODALS
+     - rounded-2xl: 16px (very large rounding)
+     - rounded-3xl: 24px (huge rounding)
+     - rounded-full: 9999px ← BADGES, PILLS, AVATARS
+  */
+
+  /* ============================================
+     SHADOW SYSTEM (ELEVATION)
+     ============================================ */
+
+  /* Tailwind's default shadow scale for elevation hierarchy */
+  /* Usage guide for components:
+     - Event cards: shadow (0 1px 3px rgba(0,0,0,0.1))
+     - Betting slip: shadow-md (0 4px 6px rgba(0,0,0,0.1))
+     - Modals: shadow-lg (0 10px 15px rgba(0,0,0,0.1))
+     - Dropdowns: shadow-lg (0 10px 15px rgba(0,0,0,0.1))
+     - Featured cards: shadow-md (elevated prominence)
+     - Sticky footer CTA: shadow-xl (0 20px 25px rgba(0,0,0,0.1))
+     - Tooltips: shadow (subtle elevation)
+     - Popovers: shadow-lg
+  */
+
+  /* Shadow values (Tailwind defaults):
+     - shadow-sm: 0 1px 2px rgba(0,0,0,0.05) - Subtle elevation
+     - shadow: 0 1px 3px rgba(0,0,0,0.1) - Default cards ← EVENT CARDS
+     - shadow-md: 0 4px 6px rgba(0,0,0,0.1) - Elevated cards ← BETTING SLIP
+     - shadow-lg: 0 10px 15px rgba(0,0,0,0.1) - Modals, dropdowns ← MODALS
+     - shadow-xl: 0 20px 25px rgba(0,0,0,0.1) - High elevation ← STICKY FOOTER
+     - shadow-2xl: 0 25px 50px rgba(0,0,0,0.25) - Maximum elevation
+  */
+
+  /* ============================================
+     COMPONENT-SPECIFIC DESIGN TOKENS
+     ============================================ */
+
+  /* ----- Cards ----- */
+  --card-background: #ffffff;
+  --card-border: var(--color-gray-200);
+  --card-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1);
+  /* Usage: <div className="bg-white border border-gray-200 rounded-lg shadow p-6"> */
+
+  /* ----- Buttons ----- */
+  /* Primary Button: bg-primary-600 hover:bg-primary-700 text-white px-4 py-2 rounded-lg font-medium */
+  /* Success Button: bg-success-600 hover:bg-success-700 text-white px-4 py-2 rounded-lg font-medium */
+  /* Warning Button: bg-warning-500 hover:bg-warning-600 text-white px-4 py-2 rounded-lg font-medium */
+  /* Danger Button: bg-error-600 hover:bg-error-700 text-white px-4 py-2 rounded-lg font-medium */
+  /* Ghost Button: bg-transparent hover:bg-gray-100 text-gray-700 px-4 py-2 rounded-lg font-medium */
+
+  /* ----- Inputs ----- */
+  /* Default Input: border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-primary-500 */
+  /* Error Input: border border-error-500 rounded-md px-3 py-2 focus:ring-2 focus:ring-error-500 */
+
+  /* ----- Badges ----- */
+  /* Primary Badge: bg-primary-100 text-primary-800 px-3 py-1 rounded-full text-sm font-medium */
+  /* Success Badge: bg-success-100 text-success-800 px-3 py-1 rounded-full text-sm font-medium */
+  /* Warning Badge: bg-warning-100 text-warning-800 px-3 py-1 rounded-full text-sm font-medium */
+  /* Error Badge: bg-error-100 text-error-800 px-3 py-1 rounded-full text-sm font-medium */
 }
 
+/* ============================================
+   DARK MODE SUPPORT
+   ============================================ */
 @media (prefers-color-scheme: dark) {
   :root {
     --background: #0a0a0a;
     --foreground: #ededed;
   }
+
+  /* Note: Full dark mode color adjustments can be added here */
+  /* For MVP, focus on light mode. Dark mode enhancement in future iterations. */
+  /* Dark mode would adjust:
+     - Background colors (darker grays)
+     - Text colors (lighter grays, inverted hierarchy)
+     - Border colors (darker, subtle)
+     - Shadow adjustments (lighter shadows on dark backgrounds)
+  */
 }
 
+/* ============================================
+   GLOBAL STYLES
+   ============================================ */
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans);
+  font-feature-settings: "kern" 1, "liga" 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
+
+/* ============================================
+   DETAILED USAGE EXAMPLES FOR DEVELOPMENT
+   ============================================ */
+
+/*
+═══════════════════════════════════════════════
+BETTING SLIP COMPONENT EXAMPLES
+═══════════════════════════════════════════════
+
+PRIMARY BUTTON (Place Bets - Default State):
+<button className="bg-primary-600 hover:bg-primary-700 active:bg-primary-800 text-white px-4 py-2 rounded-lg font-medium transition-colors shadow-sm">
+  €20 Place Bets
+</button>
+
+WARNING BUTTON (High Stake >€65):
+<button className="bg-warning-500 hover:bg-warning-600 active:bg-warning-700 text-white px-4 py-2 rounded-lg font-medium transition-colors shadow-sm">
+  €75 Place Bets
+</button>
+
+DISABLED BUTTON:
+<button className="bg-gray-200 text-gray-400 px-4 py-2 rounded-lg font-medium cursor-not-allowed" disabled>
+  Add bets to continue
+</button>
+
+SUCCESS TEXT (Win Display):
+<div className="flex items-center gap-2">
+  <span className="text-success-700 font-bold text-xl">€21.00</span>
+  <span className="text-success-600 font-semibold text-sm">+€11 profit</span>
+</div>
+
+ERROR TEXT (Loss Display):
+<div className="flex items-center gap-2">
+  <span className="text-error-600 font-semibold text-lg">Lost: -€15</span>
+  <span className="text-xs text-error-500">❌</span>
+</div>
+
+SAVINGS FEATURE (THE INNOVATION):
+<div className="bg-success-50 border border-success-200 rounded-lg p-4">
+  <p className="text-success-700 font-semibold text-lg">💰 Saved €213</p>
+  <p className="text-success-600 text-sm mt-1">Didn't gamble 18 days this month</p>
+</div>
+
+═══════════════════════════════════════════════
+CARD COMPONENTS
+═══════════════════════════════════════════════
+
+EVENT CARD (Default):
+<div className="bg-white border border-gray-200 rounded-lg shadow p-6 hover:shadow-md transition-shadow">
+  <h3 className="text-base font-semibold text-gray-900 mb-2">Arsenal vs Chelsea</h3>
+  <button className="flex-1 bg-gray-50 hover:bg-primary-50 border border-gray-200 rounded-md py-2">
+    <span className="text-lg font-semibold text-primary-600">2.10</span>
+  </button>
+</div>
+
+LIVE BETTING CARD:
+<div className="bg-white border border-error-200 rounded-lg shadow-md p-6">
+  <div className="flex items-center gap-2 mb-3">
+    <span className="w-2 h-2 bg-error-600 rounded-full animate-pulse"></span>
+    <span className="text-xs font-semibold text-error-600">LIVE</span>
+  </div>
+</div>
+
+FEATURED CARD - BOOSTED ODDS:
+<div className="bg-gradient-to-r from-red-500 to-orange-500 rounded-lg shadow-md p-6 text-white">
+  <span className="text-sm font-semibold uppercase">Boosted Odds</span>
+  <span className="text-3xl font-bold">3.50</span>
+</div>
+
+═══════════════════════════════════════════════
+TYPOGRAPHY HIERARCHY
+═══════════════════════════════════════════════
+
+ODDS DISPLAY: text-lg font-semibold text-primary-600
+STAKE INPUT: text-base font-medium
+RETURNS DISPLAY: text-xl font-bold text-gray-900
+PROFIT DISPLAY: text-lg font-bold text-success-700
+
+═══════════════════════════════════════════════
+BADGES & PILLS
+═══════════════════════════════════════════════
+
+LIVE INDICATOR:
+<span className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-error-50 border border-error-200">
+  <span className="w-2 h-2 bg-error-600 rounded-full animate-pulse"></span>
+  <span className="text-sm font-semibold text-error-600">LIVE</span>
+</span>
+
+═══════════════════════════════════════════════
+END OF USAGE EXAMPLES
+═══════════════════════════════════════════════
+*/
