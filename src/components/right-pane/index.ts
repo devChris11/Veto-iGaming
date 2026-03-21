@@ -19,3 +19,11 @@ export { ROICard } from "./stats/ROICard";
 export { BestMarketCard } from "./stats/BestMarketCard";
 export { RecentFormCard } from "./stats/RecentFormCard";
 export { AIInsights } from "./stats/AIInsights";
+
+// Responsible Gaming / Limits
+export { ResponsibleGaming } from "./limits/ResponsibleGaming";
+export { DepositLimit } from "./limits/DepositLimit";
+export { LossLimits } from "./limits/LossLimits";
+export { GameBans } from "./limits/GameBans";
+export { SessionTime } from "./limits/SessionTime";
+export { PeluuriInfo } from "./limits/PeluuriInfo";
