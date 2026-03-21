@@ -58,6 +58,28 @@ export function DevWidget() {
                 {label}
               </Link>
             ))}
+            <div className="mx-2 my-1 border-t border-gray-100" />
+            <button
+              onClick={() => {
+                sessionStorage.removeItem("veto_session_start");
+                localStorage.removeItem("veto_last_session_end");
+                window.location.reload();
+              }}
+              className="flex w-full items-center gap-2 rounded-md px-3 py-2 text-sm text-amber-600 hover:bg-amber-50"
+            >
+              <span className="text-xs">&#9201;</span>
+              Reset Session
+            </button>
+            <button
+              onClick={() => {
+                localStorage.removeItem("veto_ban_all_start");
+                window.location.reload();
+              }}
+              className="flex w-full items-center gap-2 rounded-md px-3 py-2 text-sm text-amber-600 hover:bg-amber-50"
+            >
+              <span className="text-xs">🚫</span>
+              Reset Ban Cooldown
+            </button>
           </motion.div>
         )}
       </AnimatePresence>

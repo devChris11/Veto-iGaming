@@ -9,6 +9,7 @@ import { BulkRemoveModal } from "./BulkRemoveModal";
 import { VetoCentreNav } from "./VetoCentreNav";
 import { TrendCards } from "./stats/TrendCards";
 import { AIInsights } from "./stats/AIInsights";
+import { ResponsibleGaming } from "./limits/ResponsibleGaming";
 
 interface RightPaneProps {
   accStake: number;
@@ -205,9 +206,7 @@ export function RightPane({
           className="mt-10 border-t border-gray-100 pt-8"
         >
           <h3 className="mb-4 text-base font-semibold text-gray-900">Limits</h3>
-          <div className="rounded-lg border border-dashed border-gray-200 p-8 text-center text-sm text-gray-400">
-            Responsible gaming dashboard coming in Shot 2
-          </div>
+          <ResponsibleGaming />
         </div>
       </div>
 
