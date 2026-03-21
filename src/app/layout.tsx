@@ -1,10 +1,11 @@
 import type { Metadata } from "next";
-import { Instrument_Sans } from "next/font/google";
+import { Noto_Sans } from "next/font/google";
 import { DevWidget } from "@/components/shared/DevWidget";
 import "./globals.css";
 
-const instrumentSans = Instrument_Sans({
+const notoSans = Noto_Sans({
   subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
   display: "swap",
 });
 
@@ -20,7 +21,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${instrumentSans.className} antialiased`}>
+      <body className={`${notoSans.className} antialiased`}>
         {process.env.NODE_ENV === "development" && <DevWidget />}
         <div>{children}</div>
       </body>

@@ -11,3 +11,11 @@ export { StickyFooter } from "./StickyFooter";
 export { BulkRemoveModal } from "./BulkRemoveModal";
 export { ZeroStakeWarningModal } from "./ZeroStakeWarningModal";
 export { VetoCentreNav } from "./VetoCentreNav";
+
+// Stats & Insights
+export { TrendCards } from "./stats/TrendCards";
+export { WinRateCard } from "./stats/WinRateCard";
+export { ROICard } from "./stats/ROICard";
+export { BestMarketCard } from "./stats/BestMarketCard";
+export { RecentFormCard } from "./stats/RecentFormCard";
+export { AIInsights } from "./stats/AIInsights";
