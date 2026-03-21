@@ -234,7 +234,7 @@ function AccumulatorCard({ accumulator }: AccumulatorCardProps) {
         sport: "Football",
         league: "Accumulator",
         homeTeam: sel.team.replace(" to Win", ""),
-        awayTeam: "TBD",
+        awayTeam: "",
         startTime: new Date().toISOString(),
         isLive: false,
         markets: {

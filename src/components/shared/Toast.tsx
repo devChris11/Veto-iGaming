@@ -11,14 +11,20 @@ import { motion, AnimatePresence } from "framer-motion";
 
 type ToastType = "success" | "info" | "warning";
 
+interface ToastAction {
+  label: string;
+  onClick: () => void;
+}
+
 interface Toast {
   id: string;
   message: string;
   type: ToastType;
+  action?: ToastAction;
 }
 
 interface ToastContextValue {
-  showToast: (message: string, type?: ToastType) => void;
+  showToast: (message: string, type?: ToastType, action?: ToastAction) => void;
 }
 
 const ToastContext = createContext<ToastContextValue | null>(null);
@@ -38,24 +44,27 @@ interface ToastProviderProps {
 export function ToastProvider({ children }: ToastProviderProps) {
   const [toasts, setToasts] = useState<Toast[]>([]);
 
-  const showToast = useCallback((message: string, type: ToastType = "info") => {
-    const id = `${Date.now()}-${Math.random().toString(36).slice(2, 9)}`;
-    const newToast: Toast = { id, message, type };
+  const showToast = useCallback(
+    (message: string, type: ToastType = "info", action?: ToastAction) => {
+      const id = `${Date.now()}-${Math.random().toString(36).slice(2, 9)}`;
+      const newToast: Toast = { id, message, type, action };
 
-    setToasts((prev) => {
-      // Keep max 3 toasts
-      const updated = [...prev, newToast];
-      if (updated.length > 3) {
-        return updated.slice(-3);
-      }
-      return updated;
-    });
+      setToasts((prev) => {
+        // Keep max 3 toasts
+        const updated = [...prev, newToast];
+        if (updated.length > 3) {
+          return updated.slice(-3);
+        }
+        return updated;
+      });
 
-    // Auto-dismiss after 3 seconds
-    setTimeout(() => {
-      setToasts((prev) => prev.filter((t) => t.id !== id));
-    }, 3000);
-  }, []);
+      // Auto-dismiss after 3 seconds
+      setTimeout(() => {
+        setToasts((prev) => prev.filter((t) => t.id !== id));
+      }, 3000);
+    },
+    []
+  );
 
   const removeToast = useCallback((id: string) => {
     setToasts((prev) => prev.filter((t) => t.id !== id));
@@ -156,6 +165,17 @@ function ToastItem({ toast, onRemove }: ToastItemProps) {
     >
       {iconMap[toast.type]}
       <span className="text-sm font-medium text-gray-900">{toast.message}</span>
+      {toast.action && (
+        <button
+          onClick={() => {
+            toast.action!.onClick();
+            onRemove(toast.id);
+          }}
+          className="ml-2 text-xs font-semibold text-primary-600 hover:text-primary-700"
+        >
+          {toast.action.label}
+        </button>
+      )}
       <button
         onClick={() => onRemove(toast.id)}
         className="ml-2 text-gray-400 hover:text-gray-600"

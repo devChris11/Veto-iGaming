@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { LeftPane } from "@/components/left-pane";
+import { RightPane } from "@/components/right-pane";
 import { ToastProvider, MobileTabBar } from "@/components/shared";
 import eventsData from "@/data/events.json";
 import type { Event } from "@/types/betting";
@@ -9,6 +10,12 @@ import type { Event } from "@/types/betting";
 export default function Home() {
   const [activeTab, setActiveTab] = useState<"browse" | "coupon">("browse");
   const [isDesktop, setIsDesktop] = useState(false);
+
+  // Lifted state for stakes (reset when bet is placed)
+  const [accStake, setAccStake] = useState(0);
+  const [doublesStake, setDoublesStake] = useState(0);
+  const [treblesStake, setTreblesStake] = useState(0);
+  const [fourFoldsStake, setFourFoldsStake] = useState(0);
 
   // Type cast the events data
   const events = eventsData.events as unknown as Event[];
@@ -41,13 +48,17 @@ export default function Home() {
           </div>
 
           {/* Right Pane - 50% */}
-          <div className="w-1/2 overflow-y-auto border-l border-gray-200 bg-white">
-            <div className="flex h-full items-center justify-center text-gray-400">
-              <div className="text-center">
-                <p className="text-lg font-medium">Betting Slip</p>
-                <p className="text-sm">Coming in Milestone 4</p>
-              </div>
-            </div>
+          <div className="w-1/2 overflow-hidden border-l border-gray-200">
+            <RightPane
+              accStake={accStake}
+              setAccStake={setAccStake}
+              doublesStake={doublesStake}
+              setDoublesStake={setDoublesStake}
+              treblesStake={treblesStake}
+              setTreblesStake={setTreblesStake}
+              fourFoldsStake={fourFoldsStake}
+              setFourFoldsStake={setFourFoldsStake}
+            />
           </div>
         </main>
       ) : (
@@ -58,12 +69,16 @@ export default function Home() {
             {activeTab === "browse" ? (
               <LeftPane events={events} onOddsClick={handleOddsClick} />
             ) : (
-              <div className="flex h-full items-center justify-center bg-white text-gray-400">
-                <div className="text-center">
-                  <p className="text-lg font-medium">Betting Slip</p>
-                  <p className="text-sm">Coming in Milestone 4</p>
-                </div>
-              </div>
+              <RightPane
+                accStake={accStake}
+                setAccStake={setAccStake}
+                doublesStake={doublesStake}
+                setDoublesStake={setDoublesStake}
+                treblesStake={treblesStake}
+                setTreblesStake={setTreblesStake}
+                fourFoldsStake={fourFoldsStake}
+                setFourFoldsStake={setFourFoldsStake}
+              />
             )}
           </div>
 
