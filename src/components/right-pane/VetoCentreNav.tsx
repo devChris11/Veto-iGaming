@@ -5,7 +5,7 @@ import { Receipt, BarChart2, Sparkles, ShieldCheck, Menu } from "lucide-react";
 
 const SECTIONS = [
   { id: "slip", label: "Slip", Icon: Receipt },
-  { id: "stats", label: "Stats", Icon: BarChart2 },
+  { id: "stats", label: "Performance", Icon: BarChart2 },
   { id: "insights", label: "Insights", Icon: Sparkles },
   { id: "limits", label: "Limits", Icon: ShieldCheck },
 ];

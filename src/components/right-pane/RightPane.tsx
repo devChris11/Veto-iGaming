@@ -1,12 +1,14 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
-import { Trash2 } from "lucide-react";
+import { useState, useRef, useEffect, useCallback } from "react";
+import { Trash2, RefreshCw } from "lucide-react";
 import { useBettingStore } from "@/lib/store";
 import { BettingSlip } from "./BettingSlip";
 import { StickyFooter } from "./StickyFooter";
 import { BulkRemoveModal } from "./BulkRemoveModal";
 import { VetoCentreNav } from "./VetoCentreNav";
+import { TrendCards } from "./stats/TrendCards";
+import { AIInsights } from "./stats/AIInsights";
 
 interface RightPaneProps {
   accStake: number;
@@ -32,47 +34,86 @@ export function RightPane({
   const selections = useBettingStore((state) => state.selections);
   const [showBulkRemoveModal, setShowBulkRemoveModal] = useState(false);
   const [activeSection, setActiveSection] = useState("slip");
+  const [isRefreshing, setIsRefreshing] = useState(false);
+
+  const handleInsightRefresh = useCallback(() => {
+    setIsRefreshing(true);
+    setTimeout(() => setIsRefreshing(false), 500);
+  }, []);
 
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const slipRef = useRef<HTMLDivElement>(null);
   const statsRef = useRef<HTMLDivElement>(null);
   const insightsRef = useRef<HTMLDivElement>(null);
   const limitsRef = useRef<HTMLDivElement>(null);
+  const isScrollingToSectionRef = useRef(false);
 
-  // Track which section is in view
   useEffect(() => {
-    const refs = [
-      { id: "slip", ref: slipRef },
-      { id: "stats", ref: statsRef },
-      { id: "insights", ref: insightsRef },
-      { id: "limits", ref: limitsRef },
-    ];
+    const container = scrollContainerRef.current;
+    if (!container) return;
 
-    const observers = refs.map(({ id, ref }) => {
-      if (!ref.current) return null;
-      const observer = new IntersectionObserver(
-        (entries) => {
-          if (entries[0].isIntersecting) {
-            setActiveSection(id);
+    const handleScroll = () => {
+      // If we are programmatically scrolling to a section, skip
+      // scroll-based detection until the animation completes
+      if (isScrollingToSectionRef.current) return;
+
+      const container = scrollContainerRef.current;
+      if (!container) return;
+
+      const sections = [
+        { id: "slip", ref: slipRef },
+        { id: "stats", ref: statsRef },
+        { id: "insights", ref: insightsRef },
+        { id: "limits", ref: limitsRef },
+      ];
+
+      const OFFSET = 120;
+      let current = "slip";
+      let smallestNegative = -Infinity;
+
+      for (const { id, ref } of sections) {
+        if (!ref.current) continue;
+        const top =
+          ref.current.getBoundingClientRect().top -
+          container.getBoundingClientRect().top;
+
+        if (top - OFFSET <= 0) {
+          if (top > smallestNegative) {
+            smallestNegative = top;
+            current = id;
           }
-        },
-        { threshold: 0.3, root: scrollContainerRef.current }
-      );
-      observer.observe(ref.current);
-      return observer;
-    });
+        }
+      }
 
-    return () => observers.forEach((o) => o?.disconnect());
-  }, []);
+      setActiveSection(current);
+    };
+
+    container.addEventListener("scroll", handleScroll, { passive: true });
+    handleScroll(); // set correct state on mount
+
+    return () => container.removeEventListener("scroll", handleScroll);
+  }, []); // empty deps — reads all values via refs, no stale closure
 
   const handleSectionClick = (id: string) => {
+    setActiveSection(id);
+
+    // Lock scroll listener for 600ms to prevent the scroll
+    // animation from overwriting the clicked active state
+    isScrollingToSectionRef.current = true;
+    setTimeout(() => {
+      isScrollingToSectionRef.current = false;
+    }, 600);
+
     const refMap: Record<string, React.RefObject<HTMLDivElement | null>> = {
       slip: slipRef,
       stats: statsRef,
       insights: insightsRef,
       limits: limitsRef,
     };
-    refMap[id]?.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+    refMap[id]?.current?.scrollIntoView({
+      behavior: "smooth",
+      block: "start",
+    });
   };
 
   return (
@@ -122,10 +163,10 @@ export function RightPane({
           id="stats"
           className="mt-10 border-t border-gray-100 pt-8"
         >
-          <h3 className="mb-4 text-base font-semibold text-gray-900">Stats</h3>
-          <div className="rounded-lg border border-dashed border-gray-200 p-8 text-center text-sm text-gray-400">
-            Trend cards coming in Shot 2
-          </div>
+          <h3 className="mb-4 text-base font-semibold text-gray-900">
+            Performance
+          </h3>
+          <TrendCards />
         </div>
 
         {/* Insights section */}
@@ -134,12 +175,27 @@ export function RightPane({
           id="insights"
           className="mt-10 border-t border-gray-100 pt-8"
         >
-          <h3 className="mb-4 text-base font-semibold text-gray-900">
-            Insights
-          </h3>
-          <div className="rounded-lg border border-dashed border-gray-200 p-8 text-center text-sm text-gray-400">
-            AI insights coming in Shot 2
+          {/* Heading row — refresh button inline */}
+          <div className="mb-4 flex items-center justify-between">
+            <h3 className="text-base font-semibold text-gray-900">
+              AI Insights
+            </h3>
+            <button
+              onClick={handleInsightRefresh}
+              disabled={isRefreshing}
+              className="rounded-md p-1.5 text-primary-600 transition-colors hover:bg-primary-50 disabled:opacity-50"
+              aria-label="Refresh insights"
+            >
+              <RefreshCw
+                className={`h-4 w-4 ${isRefreshing ? "animate-spin" : ""}`}
+              />
+            </button>
           </div>
+
+          <AIInsights
+            onRefresh={handleInsightRefresh}
+            isRefreshing={isRefreshing}
+          />
         </div>
 
         {/* Limits section */}
