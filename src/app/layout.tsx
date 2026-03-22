@@ -21,6 +21,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta charSet="utf-8" />
+      </head>
       <body className={`${notoSans.className} antialiased`}>
         {process.env.NODE_ENV === "development" && <DevWidget />}
         <div>{children}</div>
