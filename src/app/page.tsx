@@ -63,7 +63,7 @@ export default function Home() {
         </main>
       ) : (
         // Mobile/Tablet layout: tab-based
-        <main className="flex h-screen flex-col overflow-hidden">
+        <main className="flex h-dvh flex-col overflow-hidden">
           {/* Content area */}
           <div className="flex-1 overflow-y-auto">
             {activeTab === "browse" ? (
