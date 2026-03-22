@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Noto_Sans } from "next/font/google";
+import { AppHeaderSlot } from "@/components/shared/AppHeaderSlot";
 import { DevWidget } from "@/components/shared/DevWidget";
 import "./globals.css";
 
@@ -29,6 +30,7 @@ export default function RootLayout({
         <meta charSet="utf-8" />
       </head>
       <body className={`${notoSans.className} antialiased`}>
+        <AppHeaderSlot />
         {process.env.NODE_ENV === "development" && <DevWidget />}
         <div>{children}</div>
       </body>

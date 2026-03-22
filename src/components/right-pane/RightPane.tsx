@@ -1,6 +1,12 @@
 "use client";
 
-import { useState, useRef, useEffect, useCallback } from "react";
+import {
+  useState,
+  useRef,
+  useEffect,
+  useCallback,
+  type MutableRefObject,
+} from "react";
 import { Trash2, RefreshCw } from "lucide-react";
 import { useBettingStore } from "@/lib/store";
 import { BettingSlip } from "./BettingSlip";
@@ -20,6 +26,9 @@ interface RightPaneProps {
   setTreblesStake: (value: number) => void;
   fourFoldsStake: number;
   setFourFoldsStake: (value: number) => void;
+  activeSection: string;
+  onSectionClick: (id: string) => void;
+  onSectionClickRef?: MutableRefObject<((id: string) => void) | null>;
 }
 
 export function RightPane({
@@ -31,10 +40,12 @@ export function RightPane({
   setTreblesStake,
   fourFoldsStake,
   setFourFoldsStake,
+  activeSection,
+  onSectionClick,
+  onSectionClickRef,
 }: RightPaneProps) {
   const selections = useBettingStore((state) => state.selections);
   const [showBulkRemoveModal, setShowBulkRemoveModal] = useState(false);
-  const [activeSection, setActiveSection] = useState("slip");
   const [isRefreshing, setIsRefreshing] = useState(false);
 
   const handleInsightRefresh = useCallback(() => {
@@ -86,17 +97,17 @@ export function RightPane({
         }
       }
 
-      setActiveSection(current);
+      onSectionClick(current);
     };
 
     container.addEventListener("scroll", handleScroll, { passive: true });
     handleScroll(); // set correct state on mount
 
     return () => container.removeEventListener("scroll", handleScroll);
-  }, []); // empty deps — reads all values via refs, no stale closure
+  }, []); // empty deps — onSectionClick is parent setState (stable); scroll uses latest via closure on mount
 
   const handleSectionClick = (id: string) => {
-    setActiveSection(id);
+    onSectionClick(id);
 
     // Lock scroll listener for 600ms to prevent the scroll
     // animation from overwriting the clicked active state
@@ -116,6 +127,12 @@ export function RightPane({
       block: "start",
     });
   };
+
+  useEffect(() => {
+    if (onSectionClickRef) {
+      onSectionClickRef.current = handleSectionClick;
+    }
+  }, []);
 
   return (
     <div className="flex h-full flex-col overflow-hidden bg-white">
