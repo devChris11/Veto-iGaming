@@ -21,7 +21,7 @@ export function MobileTabBar({ activeTab, onTabChange }: MobileTabBarProps) {
   };
 
   return (
-    <div className="border-t border-gray-200 bg-white shadow-lg">
+    <div className="border-t border-gray-200 bg-white shadow-lg pb-safe">
       <div className="flex">
         {/* Browse Tab */}
         <button
