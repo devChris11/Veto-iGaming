@@ -9,7 +9,7 @@ import type { Event } from "@/types/betting";
 
 export default function Home() {
   const [activeTab, setActiveTab] = useState<"browse" | "coupon">("browse");
-  const [isDesktop, setIsDesktop] = useState(false);
+  const [isDesktop, setIsDesktop] = useState<boolean | null>(null);
 
   // Lifted state for stakes (reset when bet is placed)
   const [accStake, setAccStake] = useState(0);
@@ -32,14 +32,14 @@ export default function Home() {
 
   // Switch to coupon tab on mobile when odds are clicked
   const handleOddsClick = () => {
-    if (!isDesktop) {
+    if (isDesktop === false) {
       setActiveTab("coupon");
     }
   };
 
   return (
     <ToastProvider>
-      {isDesktop ? (
+      {isDesktop === null ? null : isDesktop ? (
         // Desktop layout: side-by-side
         <main className="flex h-screen overflow-hidden">
           {/* Left Pane - 50% */}
